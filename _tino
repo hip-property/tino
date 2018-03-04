@@ -1,25 +1,17 @@
+#compdef _tino tino
+
 function _tino {
   local line
 
   wordCount=${#words[@]}
 
-  echo hi0 $wordCount
-
-  if [[ $wordCount -eq 0 ]]; then
+  if [[ $wordCount -eq 2 ]]; then
     stages=$(python /Users/stephenavery/dev/home/tino/src/stages.py)
-
-    echo hi2 $stages
-
     _arguments \
        "1: :($stages)" 
   else
-    echo hi3.1
     stages=`python /Users/stephenavery/dev/home/tino/src/stage-jobs.py $words[2]`
-
-    echo hi3 $stages
     _arguments \
        "2: :($stages)" 
   fi
 }
-
-complete -o default -F _tino tino

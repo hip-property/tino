@@ -16,5 +16,5 @@ Could be modified to run in a shell
 ### Setup
 ```
 ln -s /Users/stephenavery/dev/home/tino/src/exec.py /usr/local/bin/tino
-mv _tino ~/.oh-my-zsh/completions
+cp _tino ~/.oh-my-zsh/completions
 ```
