@@ -1,5 +1,7 @@
 gen/
 
+**/__pycache__/
+
 ### helm ###
 requirements.lock
 
