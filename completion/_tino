@@ -5,8 +5,6 @@ function _tino {
 
   wordCount=${#words[@]}
 
-  echo foo
-
   if [[ $wordCount -eq 2 ]]; then
     stages=$(python /Users/stephenavery/dev/home/tino/src/stages.py)
     _arguments \
