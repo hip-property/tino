@@ -15,9 +15,7 @@ Could be modified to run in a shell
 
 ### Setup
 ```
-ln -s /Users/stephenavery/dev/home/tino/tino_util.py /usr/local/bin/tino_util
-ln -s /Users/stephenavery/dev/home/tino/tino.py /usr/local/bin/tino
-fpath=(<instal>/tino/completion $fpath)
+./setup.sh
 ```
 
 ### Future
