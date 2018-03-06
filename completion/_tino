@@ -6,12 +6,12 @@ function _tino {
   wordCount=${#words[@]}
 
   if [[ $wordCount -eq 2 ]]; then
-    stages=$(python /Users/stephenavery/dev/home/tino/src/stages.py)
+    stages=$(tino_util stages)
     _arguments \
        "1: :($stages)"
   else
-    stages=`python /Users/stephenavery/dev/home/tino/src/stage-jobs.py $words[2]`
+    jobs=$(tino_util stage-jobs -stage $words[2])
     _arguments \
-       "2: :($stages)"
+       "2: :($jobs)"
   fi
 }

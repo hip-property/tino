@@ -16,10 +16,7 @@ def add_logging_to_commands(raw_commands):
 
 def exec_commands(commands):
     p1 = subprocess.Popen(['/bin/bash', '-c', commands])
-    try:
-        p1.wait()
-    except:
-        print("Job interrupted")
+    p1.wait()
 
 
 def execute_script(variable_values, commands):
@@ -35,4 +32,3 @@ def execute_script(variable_values, commands):
     commands_in_single_string = format_commands(colour_commands + commands_with_logging)
 
     exec_commands(commands_in_single_string)
-

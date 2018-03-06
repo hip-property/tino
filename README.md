@@ -15,6 +15,14 @@ Could be modified to run in a shell
 
 ### Setup
 ```
-ln -s /Users/stephenavery/dev/home/tino/src/exec.py /usr/local/bin/tino
-cp _tino ~/.oh-my-zsh/completions
+ln -s /Users/stephenavery/dev/home/tino/tino_util.py /usr/local/bin/tino_util
+ln -s /Users/stephenavery/dev/home/tino/tino.py /usr/local/bin/tino
+fpath=(<instal>/tino/completion $fpath)
 ```
+
+### Future
+
+Hopefully this project dies as gitlab provides an tool that covers this.  If not there is a fair
+amount of work required to productionise:
+
+- Install should be packaged with brew
