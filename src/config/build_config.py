@@ -1,43 +1,51 @@
 import os.path
+import re
+import shlex
 
 import yaml
-import shlex
-import re
+
+GITLAB_BUILD = ".gitlab-ci.yml"
+LOCAL_BUILD = ".local-build.yml"
 
 
 class BuildConfig:
 
     def __init__(self):
-        if os.path.exists(".gitlab-ci.yml"):
-            with open(".gitlab-ci.yml", 'r') as stream:
-                self.config = yaml.load(stream)
+        self.variables = {}
+        self.jobs = {}
+        self.stages = []
 
-    def config_exists(self):
-        return self.config is not None
+        self.parse_config(GITLAB_BUILD)
+        self.parse_config(LOCAL_BUILD)
 
-    def get_build_config(self):
-        return self.config
+    def parse_config(self, build_file):
+        if os.path.exists(build_file):
+            with open(build_file, 'r') as stream:
+                _config = yaml.load(stream)
+
+                if "stages" in _config:
+                    self.stages = _config.get("stages") + self.stages
+
+                if "variables" in _config:
+                    self.variables = {**_config.get("variables"), **self.variables}
+
+                _jobs = {k: v for k, v in _config.items() if isinstance(v, dict) and "stage" in v}
+                self.jobs = {**_jobs, **self.jobs}
 
     def get_stages(self):
-        if self.config_exists():
-            return self.config.get("stages")
-        else:
-            return {}
+        return self.stages
 
     def get_variables(self):
-        if "variables" not in self.config:
-            return {}
-
-        return self.config.get("variables")
+        return self.variables
 
     def get_jobs_for_stage(self, stage):
-        return {k: v for k, v in self.config.items() if isinstance(v, dict) and v.get("stage") == stage}
+        return {k: v for k, v in self.jobs.items() if v.get("stage") == stage}.keys()
 
     def get_job_config(self, job_name):
-        if job_name not in self.config:
+        if job_name not in self.jobs:
             return {}
 
-        return self.config.get(job_name)
+        return self.jobs.get(job_name)
 
     def get_job_script_array(self, job_name):
         job_config = self.get_job_config(job_name)

@@ -1,18 +1,24 @@
 import os.path
 
 import yaml
+from pathlib import Path
 
-CONFIG_FILENAME = ".gitlab-ci-local-conf.yml"
+CONFIG_DIRECTORY = str(Path.home()) + "/.tino"
+CONFIG_FILENAME = CONFIG_DIRECTORY + "/conf.yml"
 
 
 class TinoConfig:
 
     def __init__(self):
-        if not os.path.exists(CONFIG_FILENAME):
-            self.config = {}
 
-        with open(CONFIG_FILENAME, 'r') as stream:
-            self.config = yaml.load(stream)
+        if not os.path.exists(CONFIG_DIRECTORY):
+            os.makedirs(CONFIG_DIRECTORY)
+
+        if os.path.exists(CONFIG_FILENAME):
+            with open(CONFIG_FILENAME, 'r') as stream:
+                self.config = yaml.load(stream)
+        else:
+            self.config = {}
 
     def get_tino_config(self):
         return self.config

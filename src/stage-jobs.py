@@ -13,6 +13,6 @@ try:
 
     jobsForStage = config.get_jobs_for_stage(stage)
 
-    print(format_options(jobsForStage.keys()))
+    print(format_options(jobsForStage))
 except Exception as e:
     exit()
