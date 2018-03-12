@@ -9,9 +9,11 @@ function _tino {
     stages=$(tino_util stages)
     _arguments \
        "1: :($stages)"
-  else
+  elif [[ $wordCount -eq 3 ]]; then
     jobs=$(tino_util stage-jobs -stage $words[2])
     _arguments \
        "2: :($jobs)"
+  elif [[ $wordCount -eq 4 ]]; then
+    _alternative 'args:custom arg:((--promptAll\:"Prompt for all variables" \:))'
   fi
 }

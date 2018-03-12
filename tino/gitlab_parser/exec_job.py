@@ -27,8 +27,12 @@ def get_script_variable_values(build_config, tino_config, job):
     return variable_values
 
 
-def execute_job(job):
-    build_config = BuildConfig()
+def execute_job(job, prompt_for_all_variables):
+
+    build_config = BuildConfig.including_local_variables() \
+        if prompt_for_all_variables \
+        else BuildConfig.ignoring_local_variables()
+
     tino_config = TinoConfig()
 
     variable_values = get_script_variable_values(build_config, tino_config, job)

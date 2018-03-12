@@ -1,4 +1,7 @@
+# noinspection PyUnresolvedReferences
+import logging
 import os.path
+import random
 import re
 import shlex
 
@@ -10,24 +13,45 @@ LOCAL_BUILD = ".local-build.yml"
 
 class BuildConfig:
 
-    def __init__(self):
+    @classmethod
+    def including_local_variables(cls):
+        return cls(False)
+
+    @classmethod
+    def ignoring_local_variables(cls):
+        return cls(True)
+
+    def __init__(self, ignore_local_variable_defaults):
         self.variables = {}
         self.jobs = {}
         self.stages = []
+        self.variableFunctions = []
+        self.ignoreJobs = []
 
-        self.parse_config(GITLAB_BUILD)
-        self.parse_config(LOCAL_BUILD)
+        self.parse_config(GITLAB_BUILD, True)
+        self.parse_config(LOCAL_BUILD, ignore_local_variable_defaults)
 
-    def parse_config(self, build_file):
-        if os.path.exists(build_file):
-            with open(build_file, 'r') as stream:
+        self.populate_function_variables()
+
+        for ignore_job in self.ignoreJobs:
+            self.jobs.pop(ignore_job, None)
+
+    def populate_function_variables(self):
+        for variableName, variableValue in self.variables.items():
+            if variableValue == "~~RANDOM":
+                self.variables[variableName] = random.randint(1, 1000000)
+
+    def parse_config(self, file_name, ignore_local_variable_defaults):
+        if os.path.exists(file_name):
+            with open(file_name, 'r') as stream:
                 _config = yaml.load(stream)
 
                 if "stages" in _config:
                     self.stages = _config.get("stages") + self.stages
-
-                if "variables" in _config:
+                if "variables" in _config and ignore_local_variable_defaults:
                     self.variables = {**_config.get("variables"), **self.variables}
+                if "ignoreJobs" in _config:
+                    self.ignoreJobs = _config.get("ignoreJobs") + self.ignoreJobs
 
                 _jobs = {k: v for k, v in _config.items() if isinstance(v, dict) and "stage" in v}
                 self.jobs = {**_jobs, **self.jobs}

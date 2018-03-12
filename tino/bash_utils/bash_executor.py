@@ -26,7 +26,7 @@ def execute_script(variable_values, commands):
 
     variable_commands = []
     for variableName, variableValue in variable_values.items():
-        variable_commands.append(variableName + '="' + variableValue + '"')
+        variable_commands.append(variableName + '="' + str(variableValue) + '"')
 
     commands_with_logging = add_logging_to_commands(variable_commands + commands)
     commands_in_single_string = format_commands(colour_commands + commands_with_logging)
